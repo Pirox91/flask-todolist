@@ -4,14 +4,12 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 
 app = Flask(__name__)
-app.secret_key = 'supersecretkey'  # Replace with a real secret key in production
+app.secret_key = 'supersecretkey'  
 
-# SQLite Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todo.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# Database models
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
@@ -22,11 +20,9 @@ class Task(db.Model):
     content = db.Column(db.String(200), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
-# Create database tables
 with app.app_context():
     db.create_all()
 
-# Helper function to check if user is logged in
 def login_required(f):
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
